@@ -9,5 +9,5 @@ var logger = new winston.Logger({transports: [new winston.transports.Console({le
                                                                            json:true,
                                                                            datePattern: '.dd-MM-yyyy'})]});
 
-var dgkeep - require('./lib/dgkeep');
+var dgkeep = require('./lib/dgkeep');
 dgkeep = dgkeep(logger);

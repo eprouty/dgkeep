@@ -19,14 +19,20 @@
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4",
     "mocha-lcov-reporter": "0.0.2",
+    "pre-git": "^0.2.1",
     "sqlite3": "^3.0.6"
   },
   "scripts": {
     "start": "node index.js",
     "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js",
+    "lint-index": "eslint index.js"
   },
+  "pre-commit": [
+    "npm run lint",
+    "npm run lint-index"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/eprouty/dgkeep.git"
