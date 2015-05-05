@@ -8,14 +8,21 @@
     "test": "test"
   },
   "dependencies": {
-    "chai": "^2.3.0"
+    "chai": "^2.3.0",
+    "pg": "^4.3.0",
+    "sequelize": "^2.1.0",
+    "underscore": "^1.8.3",
+    "winston": "^1.0.0"
   },
   "devDependencies": {
     "istanbul": "^0.3.13",
-    "mocha": "^2.2.4"
+    "mocha": "^2.2.4",
+    "sqlite3": "^3.0.6"
   },
   "scripts": {
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha"
+    "start": "node index.js",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "lint": "eslint **/*.js"
   },
   "repository": {
     "type": "git",
