@@ -8,4 +8,6 @@ var logger = new winston.Logger({transports: [new winston.transports.Console({le
                                                                            colorize:true,
                                                                            json:true,
                                                                            datePattern: '.dd-MM-yyyy'})]});
-logger.info('DGKeep starting...');
+
+var dgkeep - require('./lib/dgkeep');
+dgkeep = dgkeep(logger);
