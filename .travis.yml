@@ -3,3 +3,5 @@ node_js:
     - "0.12"
     - "stable"
 after_success: 'npm run coveralls'
+before_script:
+    - psql -c 'create database dgkeep_test;' -U postgres
