@@ -1,0 +1,30 @@
+{
+  "name": "dgkeep",
+  "version": "0.0.0",
+  "description": "Configurable API for tracking game scores",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^2.3.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.3.13",
+    "mocha": "^2.2.4"
+  },
+  "scripts": {
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eprouty/dgkeep.git"
+  },
+  "author": "Eric Prouty <e.prouty12@gmail.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/eprouty/dgkeep/issues"
+  },
+  "homepage": "https://github.com/eprouty/dgkeep"
+}
