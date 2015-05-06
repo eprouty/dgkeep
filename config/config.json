@@ -1,0 +1,18 @@
+{
+    "test": {
+        "username": "postgres",
+        "password": null,
+        "database": "dgkeep_test",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "port": 5432
+    },
+    "dev": {
+        "username": "postgres",
+        "password": null,
+        "database": "dgkeep_dev",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "port": 5432
+    }
+}
