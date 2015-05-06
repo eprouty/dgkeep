@@ -16,7 +16,8 @@ var sequelize = new Sequelize('dgkeep_test', 'postgres', null,
 describe('dgkeep', function(){
     describe('Setup', function(){
         it ('Should be able to initialize', function(){
-            dgkeep(logger);
+            var dgk = dgkeep(logger);
+            assert(dgk);
         });
 
         it ('Should return an error if the database can\'t connect', function(done){
@@ -25,19 +26,20 @@ describe('dgkeep', function(){
                 defer.reject(new Error('Failed Connection'));
                 return defer.promise.nodeify();
             }};
-            dgkeep(logger, dummySequelize, function(err){
-                if (err){
-                    assert(err);
-                } else {
-                    assert.fail();
-                }
+            var dgk = dgkeep(logger, dummySequelize);
+            dgk.isInitialized(function(res){
+                assert.strictEqual(res, false);
                 done();
             });
         });
 
         it ('Should be able to connect to the pgsql test database', function(done){
             assert.doesNotThrow(function(){
-                dgkeep(logger, sequelize, done);
+                var dgk = dgkeep(logger, sequelize);
+                dgk.isInitialized(function(res){
+                    assert.strictEqual(res, true);
+                    done();
+                });
             });
         });
     });

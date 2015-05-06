@@ -18,3 +18,6 @@ launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 createdb dgkeep_test
 psql -c 'CREATE ROLE postgres LOGIN;' dgkeep_test
 ```
+
+Install dependencies by running `npm install`
+Run the tests using `npm test`
