@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
+/* istanbul ignore next */
 var env = process.env.NODE_ENV || 'dev';
 var config = require(path.join(__dirname, '/../config/config.json'))[env];
 
@@ -28,6 +29,7 @@ fs.readdirSync(__dirname)
   });
 
 Object.keys(db).forEach(function(modelName) {
+  /* istanbul ignore else */
   if ('associate' in db[modelName]) {
     db[modelName].associate(db);
   }
