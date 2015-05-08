@@ -19,6 +19,7 @@ config.logging = logger.info;
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db = {};
 
+/* eslint-disable no-sync */
 fs.readdirSync(__dirname)
   .filter(function(file) {
     return file.indexOf('.') !== 0 && file !== basename;

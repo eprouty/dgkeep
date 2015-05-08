@@ -8,6 +8,7 @@ var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 fs.unlink(path.join(__dirname, '../../logs/sequelize.log'), _.noop);
+fs.unlink(path.join(__dirname, '../../logs/test.log'), _.noop);
 
 var dgkeep = require('../../lib/dgkeep');
 var models = require('../../models');
@@ -19,7 +20,9 @@ models.Players = mock_promise_based(models.Players);
 models.Courses = mock_promise_based(models.Courses);
 
 var winston = require('winston');
-var logger = new winston.Logger({transports: [new winston.transports.Console({level:'silly',timestamp:true,colorize:true})]});
+var logger = new winston.Logger({transports: [new winston.transports.File({filename: path.join(__dirname, '../../logs/test.log'),
+                                                                           level:'debug',
+                                                                           timestamp: true})]});
 var assert = require('assert');
 
 var dgk = null;
@@ -43,6 +46,11 @@ construct.beforeEach = function beforeEach(done){
 
 describe('dgkeep', function(){
     describe('Setup', function(){
+        it('Should be able to initialize all non-database functionality', function(){
+            var dgkTemp = dgkeep(logger);
+            assert(dgkTemp);
+        });
+
         it('Should return an error if the database can\'t connect', function(done){
             models.sequelize.setError('authenticate', new Error('Failed to connect'));
             var dgk2 = dgkeep(logger, models);
@@ -138,6 +146,90 @@ describe('dgkeep', function(){
                     return dgk.hasCourse('Borderlands');
                 }).done(function(res){
                     assert.equal(res, true);
+                    done();
+                });
+        });
+
+        it('Should not be able to have two courses with the same name', function(done){
+            dgk.createCourse('Borderlands')
+                .then(function(){
+                    return dgk.createCourse('Borderlands');
+                }).then(function(){
+                    assert.fail("Should not have allowed the creation of two courses with the same name");
+                    done();
+                }).catch(function(err){
+                    assert(err instanceof Error);
+                    done();
+                });
+        });
+
+        it('Should be able to get a course by name', function(done){
+            dgk.createCourse('Borderlands')
+                .then(function(){
+                    return dgk.getCourse('Borderlands');
+                })
+                .done(function(course){
+                    assert.equal(course.courseName, 'Borderlands');
+                    done();
+                });
+        });
+
+        it('Should know if a course doesn\'t have a hole number', function(done){
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    return dgk.courseHasHole(course, 1);
+                })
+                .then(function(res){
+                    assert.equal(res, false);
+                    done();
+                });
+        });
+
+        it('Should be able to add a hole to a course', function(done){
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    return dgk.createHoleOnCourse(course, 1);
+                }).then(function(hole){
+                    assert.equal(hole.holeNum, 1);
+                    done();
+                }).catch(function(err){
+                    assert.fail(err);
+                    done();
+                });
+        });
+
+        it('Should be able to tell if a course has a specific hole', function(done){
+            var curCourse = null;
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    curCourse = course;
+                    return dgk.createHoleOnCourse(course, 1);
+                })
+                .then(function(){
+                    return dgk.courseHasHole(curCourse, 1);
+                }).done(function(res){
+                    assert.equal(res, true);
+                    done();
+                });
+        });
+
+        it('Should not be able to have duplicate holes on a single course', function(done){
+            var curCourse;
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    curCourse = course;
+                    return dgk.createHoleOnCourse(course, 1);
+                })
+                .then(function(){
+                    return dgk.createHoleOnCourse(curCourse, 1);
+                })
+                .then(function(){
+                    assert(false, "Should not have been able to create two hole #1s on the same course");
+                    done();
+                })
+                .catch(function(err){
+                    assert(err instanceof Error);
+                    assert.notEqual(err.name, 'AssertionError');
                     done();
                 });
         });

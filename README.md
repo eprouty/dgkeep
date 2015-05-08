@@ -27,3 +27,6 @@ Run the tests using `npm test`
 All tests are run against the dgkeep_test database which will be wiped clean before each test.
 
 Please note that all Sequelize logging is routed to `logs/sequelize.log`, in order to make debugging clearer, this log is wiped at the start of testing. If you are doing development and wish to hold onto this log make sure to create a copy before running `npm test`.
+
+Logger output from testing can be found at `logs/test.log`
+Logger output from Sequelize can be found at `logs/sequelize.log`
