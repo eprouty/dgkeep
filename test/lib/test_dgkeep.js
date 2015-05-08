@@ -7,7 +7,7 @@ var _ = require('lodash');
 //cleanup sequelize log file.
 var fs = require('fs');
 var path = require('path');
-fs.unlinkSync(path.join(__dirname, '../../logs/sequelize.log'));
+fs.unlink(path.join(__dirname, '../../logs/sequelize.log'), _.noop);
 
 var dgkeep = require('../../lib/dgkeep');
 var models = require('../../models');
@@ -96,12 +96,13 @@ describe('dgkeep', function(){
         });
 
         it('Should be able to store multiple players names', function(done){
-            dgk.createPlayer('Lee');
-            dgk.createPlayer('Nick');
-            dgk.hasPlayer('Lee')
-                .then(function(res){
-                    assert.equal(res, true);
+            dgk.createPlayer('Lee')
+                .then(function(){
+                    return dgk.createPlayer('Nick');
                 }).then(function(){
+                    return dgk.hasPlayer('Lee');
+                }).then(function(res){
+                    assert.equal(res, true);
                     return dgk.hasPlayer('Nick');
                 }).done(function(res){
                     assert.equal(res, true);
