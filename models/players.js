@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
                     Players.belongsToMany(models.Rounds,
                                          {through: {model: models.PlayerRounds},
                                          foreignKey: "PlayerId"});
+                    Players.hasMany(models.Scores);
                 }
             }
          });

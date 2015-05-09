@@ -9,6 +9,7 @@ module.exports = function rounds(sequelize, DataTypes){
                                         {through: {model: models.PlayerRounds},
                                         foreignKey: 'RoundId'});
                     Rounds.belongsTo(models.Courses);
+                    Rounds.hasMany(models.Scores);
                 }
             }
         });

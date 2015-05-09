@@ -25,8 +25,13 @@ var logger = new winston.Logger({transports: [new winston.transports.File({filen
                                                                            timestamp: true})]});
 var assert = require('assert');
 
+//Shared values for testing
 var dgk = null;
 var construct = {};
+var borderlands;
+var lee;
+var nick;
+
 construct.before = function before(done){
     dgk = dgkeep(logger, models);
     dgk.isInitialized(function(res){
@@ -43,6 +48,26 @@ construct.beforeEach = function beforeEach(done){
             done();
         });
     };
+
+construct.basicData = function basicData(done){
+    //Setup a few standard entries that we will want to use for testing
+    dgk.createCourse('Borderlands')
+        .then(function(course){
+            borderlands = course;
+            return dgk.createHoles(course, 18);
+        })
+        .then(function(){
+            return dgk.createPlayer('Lee');
+        })
+        .then(function(player){
+            lee = player;
+            return dgk.createPlayer('Nick');
+        })
+        .then(function(player){
+            nick = player;
+            done();
+        });
+}
 
 describe('dgkeep', function(){
     describe('Setup', function(){
@@ -272,30 +297,10 @@ describe('dgkeep', function(){
     });
 
     describe('Rounds', function(){
-        var borderlands;
-        var lee;
-        var nick;
-
         before(construct.before);
         beforeEach(function(done){
             construct.beforeEach(function(){
-                //Setup a few standard entries that we will want to use for testing
-                dgk.createCourse('Borderlands')
-                    .then(function(course){
-                        borderlands = course;
-                        return dgk.createHoles(course, 18);
-                    })
-                    .then(function(){
-                        return dgk.createPlayer('Lee');
-                    })
-                    .then(function(player){
-                        lee = player;
-                        return dgk.createPlayer('Nick');
-                    })
-                    .then(function(player){
-                        nick = player;
-                        done();
-                    });
+                construct.basicData(done);
             });
         });
 
@@ -332,5 +337,17 @@ describe('dgkeep', function(){
                     done();
                 });
         });
+    });
+
+    describe('Scores', function(){
+        before(construct.before);
+        beforeEach(construct.beforeEach);
+
+        // it('Should be able to add a score', function(done){
+        //     //Scores should be added based off a known PlayerRound...
+        //     //TODO: score should belong to a PlayerRound...
+        //     dgk.addScore(playerRound, dgk.getHole(borderlands, 1), 3)
+        //         .then(dgk.getScore())
+        // });
     });
 });

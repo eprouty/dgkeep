@@ -29,3 +29,6 @@ Please note that all Sequelize logging is routed to `logs/sequelize.log`, in ord
 
 Logger output from testing can be found at `logs/test.log`
 Logger output from Sequelize can be found at `logs/sequelize.log`
+
+[![npm](https://img.shields.io/npm/v/dgkeep.svg)](https://npmjs.com/package/dgkeep)
+[![npm](https://img.shields.io/npm/l/dgkeep.svg)](https://npmjs.com/package/dgkeep)
