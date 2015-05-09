@@ -177,7 +177,7 @@ describe('dgkeep', function(){
         it('Should know if a course doesn\'t have a hole number', function(done){
             dgk.createCourse('Borderlands')
                 .then(function(course){
-                    return dgk.courseHasHole(course, 1);
+                    return dgk.hasHole(course, 1);
                 })
                 .then(function(res){
                     assert.equal(res, false);
@@ -188,7 +188,7 @@ describe('dgkeep', function(){
         it('Should be able to add a hole to a course', function(done){
             dgk.createCourse('Borderlands')
                 .then(function(course){
-                    return dgk.createHoleOnCourse(course, 1);
+                    return dgk.createHole(course, 1);
                 }).then(function(hole){
                     assert.equal(hole.holeNum, 1);
                     done();
@@ -203,10 +203,10 @@ describe('dgkeep', function(){
             dgk.createCourse('Borderlands')
                 .then(function(course){
                     curCourse = course;
-                    return dgk.createHoleOnCourse(course, 1);
+                    return dgk.createHole(course, 1);
                 })
                 .then(function(){
-                    return dgk.courseHasHole(curCourse, 1);
+                    return dgk.hasHole(curCourse, 1);
                 }).done(function(res){
                     assert.equal(res, true);
                     done();
@@ -218,10 +218,10 @@ describe('dgkeep', function(){
             dgk.createCourse('Borderlands')
                 .then(function(course){
                     curCourse = course;
-                    return dgk.createHoleOnCourse(course, 1);
+                    return dgk.createHole(course, 1);
                 })
                 .then(function(){
-                    return dgk.createHoleOnCourse(curCourse, 1);
+                    return dgk.createHole(curCourse, 1);
                 })
                 .then(function(){
                     assert(false, "Should not have been able to create two hole #1s on the same course");
@@ -230,6 +230,105 @@ describe('dgkeep', function(){
                 .catch(function(err){
                     assert(err instanceof Error);
                     assert.notEqual(err.name, 'AssertionError');
+                    done();
+                });
+        });
+
+        it('Should be able to list all holes on a course', function(done){
+            var curCourse;
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    curCourse = course;
+                    return dgk.createHole(course, 1);
+                })
+                .then(function(){
+                    return dgk.createHole(curCourse, 2);
+                })
+                .then(function(){
+                    return dgk.listHoles(curCourse);
+                })
+                .then(function(holes){
+                    assert(holes instanceof Array);
+                    assert.equal(holes.length, 2);
+                    done();
+                });
+        });
+
+        it('Should be able to create multiple holes on a single course', function(done){
+            var curCourse;
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    curCourse = course;
+                    return dgk.createHoles(course, 18);
+                })
+                .then(function(){
+                    return dgk.listHoles(curCourse);
+                })
+                .then(function(holes){
+                    assert.equal(holes.length, 18);
+                    done();
+                });
+        });
+    });
+
+    describe('Rounds', function(){
+        var borderlands;
+        var lee;
+        var nick;
+
+        before(construct.before);
+        beforeEach(function(done){
+            construct.beforeEach(function(){
+                //Setup a few standard entries that we will want to use for testing
+                dgk.createCourse('Borderlands')
+                    .then(function(course){
+                        borderlands = course;
+                        return dgk.createHoles(course, 18);
+                    })
+                    .then(function(){
+                        return dgk.createPlayer('Lee');
+                    })
+                    .then(function(player){
+                        lee = player;
+                        return dgk.createPlayer('Nick');
+                    })
+                    .then(function(player){
+                        nick = player;
+                        done();
+                    });
+            });
+        });
+
+        it('Should not be able to create a round with no players in it', function(done){
+            dgk.createRound(borderlands)
+                .catch(function(err){
+                    assert(err);
+                    assert(err instanceof Error);
+                    done();
+                });
+        });
+
+        it('Should be able to create a round with one player in it', function(done){
+            dgk.createRound(borderlands, [nick])
+                .then(function(playerround){
+                    return dgk.roundInfo(playerround[0].RoundId);
+                })
+                .then(function(res){
+                    assert.equal(res.Course.courseName, borderlands.courseName);
+                    assert.equal(res.Players[0].username, nick.username);
+                    assert.equal(res.id, 1);
+                    done();
+                });
+        });
+
+        it('Should be able to create a round with multiple players in it', function(done){
+            dgk.createRound(borderlands, [nick, lee])
+                .then(function(playerround){
+                    return dgk.roundInfo(playerround[0].RoundId);
+                }).then(function(res){
+                    assert.equal(res.Course.id, borderlands.id);
+                    assert.equal(res.Players.length, 2);
+                    assert.deepEqual([res.Players[1].id, res.Players[0].id].sort(), [lee.id, nick.id].sort());
                     done();
                 });
         });
