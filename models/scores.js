@@ -5,9 +5,8 @@ module.exports = function scores(sequelize, DataTypes){
         score: DataTypes.INTEGER
     }, {classMethods:
             {associate: function(models){
-                Scores.belongsTo(models.Players);
+                Scores.belongsTo(models.PlayerRounds);
                 Scores.belongsTo(models.Holes);
-                Scores.belongsTo(models.Rounds);
             }
         }
     });

@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
+
 /* istanbul ignore next */
 var env = process.env.NODE_ENV || 'dev';
 var config = require(path.join(__dirname, '/../config/config.json'))[env];
@@ -21,19 +22,19 @@ var db = {};
 
 /* eslint-disable no-sync */
 fs.readdirSync(__dirname)
-  .filter(function(file) {
-    return file.indexOf('.') !== 0 && file !== basename;
-  })
-  .forEach(function(file) {
-    var model = sequelize.import(path.join(__dirname, file));
-    db[model.name] = model;
-  });
+    .filter(function(file) {
+        return file.indexOf('.') !== 0 && file !== basename;
+    })
+    .forEach(function(file) {
+        var model = sequelize.import(path.join(__dirname, file));
+        db[model.name] = model;
+    });
 
 Object.keys(db).forEach(function(modelName) {
-  /* istanbul ignore else */
-  if ('associate' in db[modelName]) {
-    db[modelName].associate(db);
-  }
+    /* istanbul ignore else */
+    if ('associate' in db[modelName]) {
+        db[modelName].associate(db);
+    }
 });
 
 db.sequelize = sequelize;

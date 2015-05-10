@@ -29,6 +29,7 @@ var assert = require('assert');
 var dgk = null;
 var construct = {};
 var borderlands;
+var borderlands_holes;
 var lee;
 var nick;
 
@@ -56,7 +57,8 @@ construct.basicData = function basicData(done){
             borderlands = course;
             return dgk.createHoles(course, 18);
         })
-        .then(function(){
+        .then(function(holes){
+            borderlands_holes = holes;
             return dgk.createPlayer('Lee');
         })
         .then(function(player){
@@ -67,7 +69,7 @@ construct.basicData = function basicData(done){
             nick = player;
             done();
         });
-}
+};
 
 describe('dgkeep', function(){
     describe('Setup', function(){
@@ -296,6 +298,23 @@ describe('dgkeep', function(){
         });
     });
 
+    describe('Holes', function(){
+        before(construct.before);
+        beforeEach(function(done){
+            construct.beforeEach(function(){
+                construct.basicData(done);
+            });
+        });
+
+        it('Should be able to get an existing hole', function(done){
+            dgk.getHole(borderlands.id, 1)
+                .then(function(hole){
+                    assert.equal(hole.id, borderlands_holes[0].id);
+                    done();
+                });
+        });
+    });
+
     describe('Rounds', function(){
         before(construct.before);
         beforeEach(function(done){
@@ -340,14 +359,34 @@ describe('dgkeep', function(){
     });
 
     describe('Scores', function(){
+        var leeRound;
+        var nickRound;
         before(construct.before);
-        beforeEach(construct.beforeEach);
+        beforeEach(function(done){
+            construct.beforeEach(function(){
+                construct.basicData(function(){
+                    dgk.createRound(borderlands, [nick, lee])
+                        .then(function(pr){
+                            for(var i = 0; i < pr.length; i++){
+                                if(pr[i].PlayerId === lee.id){
+                                    leeRound = pr[i];
+                                } else {
+                                    nickRound = pr[i];
+                                }
+                            }
+                            done();
+                        });
+                });
+            });
+        });
 
-        // it('Should be able to add a score', function(done){
-        //     //Scores should be added based off a known PlayerRound...
-        //     //TODO: score should belong to a PlayerRound...
-        //     dgk.addScore(playerRound, dgk.getHole(borderlands, 1), 3)
-        //         .then(dgk.getScore())
-        // });
+        it('Should be able to add a score', function(done){
+            dgk.addScore(leeRound, 1, 3)
+                .then(function(score){
+                    assert.equal(score.score, 3);
+                    assert.equal(score.PlayerRoundId, leeRound.id);
+                    done();
+                });
+        });
     });
 });
