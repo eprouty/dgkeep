@@ -4,9 +4,11 @@ DGKeep [![Build Status](https://travis-ci.org/eprouty/dgkeep.svg?branch=master)]
 Configurable API for tracking golf scores
 
 ## Environment
-This project uses NPM to manage its dependencies, to set up your development environment run `npm install`
+The following instructions are for OSX development environments.
 
-This project using Sequalize as an RDBMS so it can handle most relational databases, the test suite is run against a PostgreSQL backend so that must be setup as well.
+This project uses NPM to manage its dependencies, to set up your development environment run `npm install`.
+
+This project uses Sequalize as an RDBMS so it can handle most relational databases, the test suite is run against a PostgreSQL backend so that must be setup as well.
 
 ```bash
 brew install postgresql
@@ -19,8 +21,8 @@ createdb dgkeep_dev
 psql -c 'CREATE ROLE postgres LOGIN;' dgkeep_test
 ```
 
-Install dependencies by running `npm install`
-Run the tests using `npm test`
+Install dependencies by running `npm install`.
+Run the tests using `npm test`.
 
 ## Testing
 All tests are run against the dgkeep_test database which will be wiped clean before each test.
