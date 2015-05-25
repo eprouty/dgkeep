@@ -296,6 +296,21 @@ describe('dgkeep', function(){
                     done();
                 });
         });
+
+        it('Should be able to list the pars for a course', function(done){
+            dgk.createCourse('Borderlands')
+                .then(function(course){
+                    return dgk.createHoles(course, 18);
+                })
+                .then(function(){
+                    return dgk.getCoursePars('Borderlands');
+                })
+                .then(function(pars){
+                    assert.equal(pars.length, 18);
+                    assert.deepEqual(pars, [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]);
+                    done();
+                });
+        });
     });
 
     describe('Holes', function(){
@@ -310,6 +325,35 @@ describe('dgkeep', function(){
             dgk.getHole(borderlands.id, 1)
                 .then(function(hole){
                     assert.equal(hole.id, borderlands_holes[0].id);
+                    done();
+                });
+        });
+
+        it('Should be able to get the par of an existing hole', function(done){
+            var votes = 0;
+            var voteDone = function(){
+                votes++;
+                if (votes === 2){
+                    done();
+                }
+            };
+            dgk.getHole(borderlands.id, 1)
+                .then(function(hole){
+                    assert.equal(hole.par, borderlands_holes[0].par);
+                    voteDone();
+                });
+
+            dgk.getHolePar(borderlands.id, 1)
+                .then(function(par){
+                    assert.equal(par, borderlands_holes[0].par);
+                    voteDone();
+                });
+        });
+
+        it('Should return -1 if a holes par does not exist', function(done){
+            dgk.getHolePar(borderlands.id, 19)
+                .then(function(par){
+                    assert.equal(par, -1);
                     done();
                 });
         });

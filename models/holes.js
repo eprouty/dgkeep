@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
             holeNum: {type: DataTypes.INTEGER,
                       unique: 'hole_num_course'},
             CourseId: {type: DataTypes.INTEGER,
-                       unique: 'hole_num_course'}
+                       unique: 'hole_num_course'},
+            par: {type: DataTypes.INTEGER}
         }, {classMethods:
                 {associate: function(models) {
                     Holes.belongsTo(models.Courses);
