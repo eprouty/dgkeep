@@ -1,6 +1,6 @@
 {
   "name": "dgkeep",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Configurable API for tracking game scores",
   "main": "index.js",
   "directories": {
