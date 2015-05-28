@@ -368,7 +368,7 @@ describe('dgkeep', function(){
         });
 
         it('Should not be able to create a round with no players in it', function(done){
-            dgk.createRound(borderlands)
+            dgk.createRound(borderlands.id)
                 .catch(function(err){
                     assert(err);
                     assert(err instanceof Error);
@@ -377,7 +377,7 @@ describe('dgkeep', function(){
         });
 
         it('Should be able to create a round with one player in it', function(done){
-            dgk.createRound(borderlands, [nick])
+            dgk.createRound(borderlands.id, [nick])
                 .then(function(playerround){
                     return dgk.roundInfo(playerround[0].RoundId);
                 })
@@ -390,7 +390,7 @@ describe('dgkeep', function(){
         });
 
         it('Should be able to create a round with multiple players in it', function(done){
-            dgk.createRound(borderlands, [nick, lee])
+            dgk.createRound(borderlands.id, [nick, lee])
                 .then(function(playerround){
                     return dgk.roundInfo(playerround[0].RoundId);
                 }).then(function(res){
@@ -409,7 +409,7 @@ describe('dgkeep', function(){
         beforeEach(function(done){
             construct.beforeEach(function(){
                 construct.basicData(function(){
-                    dgk.createRound(borderlands, [nick, lee])
+                    dgk.createRound(borderlands.id, [nick, lee])
                         .then(function(pr){
                             for(var i = 0; i < pr.length; i++){
                                 if(pr[i].PlayerId === lee.id){

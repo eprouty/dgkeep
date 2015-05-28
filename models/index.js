@@ -6,7 +6,7 @@ var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
 
 /* istanbul ignore next */
-var env = process.env.NODE_ENV || 'dev';
+var env = process.env.NODE_ENV || 'development';
 var config = require(path.join(__dirname, '/../config/config.json'))[env];
 
 var winston = require('winston');

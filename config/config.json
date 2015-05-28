@@ -7,7 +7,7 @@
         "dialect": "postgres",
         "port": 5432
     },
-    "dev": {
+    "development": {
         "username": "postgres",
         "password": null,
         "database": "dgkeep_dev",
