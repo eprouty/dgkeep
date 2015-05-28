@@ -8,6 +8,7 @@
     "test": "test"
   },
   "dependencies": {
+    "epilogue": "^0.5.1",
     "lodash": "^3.8.0",
     "pg": "^4.3.0",
     "pg-hstore": "^2.3.2",
